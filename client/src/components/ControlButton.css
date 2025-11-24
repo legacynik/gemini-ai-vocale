@@ -1,0 +1,41 @@
+.control-button {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(10, 14, 26, 0.8);
+    border: 1px solid var(--cyan-primary);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 60;
+    transition: all 0.3s;
+    box-shadow: 0 0 15px rgba(0, 217, 255, 0.2);
+    backdrop-filter: blur(5px);
+}
+
+.control-button:hover:not(.disabled) {
+    box-shadow: 0 0 25px rgba(0, 217, 255, 0.4);
+    background: rgba(0, 217, 255, 0.1);
+    transform: scale(1.1);
+}
+
+.control-button.recording {
+    border-color: #ff4444;
+    box-shadow: 0 0 20px rgba(255, 68, 68, 0.4);
+}
+
+.control-button.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-color: #666;
+    box-shadow: none;
+}
+
+.button-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}

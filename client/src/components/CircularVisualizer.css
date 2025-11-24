@@ -1,0 +1,32 @@
+.circular-visualizer {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+
+.visualizer-canvas {
+    filter: drop-shadow(0 0 20px rgba(0, 217, 255, 0.3));
+}
+
+.circular-visualizer.recording .visualizer-canvas {
+    filter: drop-shadow(0 0 30px rgba(0, 217, 255, 0.6));
+    animation: pulse-glow 2s infinite;
+}
+
+.circular-visualizer.speaking .visualizer-canvas {
+    filter: drop-shadow(0 0 25px rgba(0, 102, 255, 0.5));
+}
+
+@keyframes pulse-glow {
+
+    0%,
+    100% {
+        filter: drop-shadow(0 0 20px rgba(0, 217, 255, 0.6));
+    }
+
+    50% {
+        filter: drop-shadow(0 0 40px rgba(0, 217, 255, 0.9));
+    }
+}

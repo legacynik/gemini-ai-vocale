@@ -1,0 +1,156 @@
+.app {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 10;
+}
+
+.visualizer-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 300px;
+    height: 300px;
+}
+
+.control-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 20;
+}
+
+/* API Key Screen */
+.api-key-screen {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.api-key-container {
+    z-index: 100;
+    text-align: center;
+    background: rgba(10, 14, 26, 0.9);
+    backdrop-filter: blur(10px);
+    padding: 3rem;
+    border-radius: 20px;
+    border: 2px solid var(--cyan-primary);
+    box-shadow: var(--glow-lg);
+    max-width: 500px;
+    width: 90%;
+}
+
+.api-key-container h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.api-key-subtitle {
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
+}
+
+.api-key-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.api-key-input {
+    background: rgba(0, 217, 255, 0.05);
+    border: 1px solid var(--cyan-primary);
+    color: var(--text-primary);
+    padding: 1rem;
+    border-radius: 10px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1rem;
+}
+
+.api-key-input:focus {
+    outline: none;
+    box-shadow: var(--glow-sm);
+}
+
+.api-key-submit {
+    background: var(--cyan-primary);
+    color: var(--bg-dark);
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 10px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.api-key-submit:hover {
+    box-shadow: var(--glow-md);
+    transform: scale(1.05);
+}
+
+.api-key-skip {
+    background: transparent;
+    color: var(--text-secondary);
+    border: none;
+    margin-top: 1rem;
+    cursor: pointer;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.85rem;
+    transition: color 0.3s;
+}
+
+.api-key-skip:hover {
+    color: var(--text-primary);
+}
+
+/* Status Bar */
+.status-bar {
+    position: fixed;
+    bottom: 120px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(10, 14, 26, 0.9);
+    backdrop-filter: blur(10px);
+    padding: 0.75rem 2rem;
+    border-radius: 20px;
+    border: 1px solid var(--cyan-primary);
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    z-index: 70;
+    box-shadow: var(--glow-sm);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .top-bar {
+        padding: 0 1rem;
+    }
+
+    .top-bar-left .title {
+        font-size: 1rem;
+    }
+
+    .voice-options {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}

@@ -1,0 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;900&family=Roboto+Mono:wght@300;400;500&display=swap');
+
+:root {
+    --bg-dark: #0a0e1a;
+    --bg-darker: #050810;
+    --cyan-primary: #00d9ff;
+    --cyan-glow: rgba(0, 217, 255, 0.5);
+    --blue-accent: #0066ff;
+    --text-primary: #ffffff;
+    --text-secondary: #8b9dc3;
+    --glow-sm: 0 0 10px var(--cyan-glow);
+    --glow-md: 0 0 20px var(--cyan-glow);
+    --glow-lg: 0 0 30px var(--cyan-glow);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto Mono', monospace;
+    background: var(--bg-darker);
+    color: var(--text-primary);
+    overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+}
+
+.glow-text {
+    text-shadow: var(--glow-sm);
+    color: var(--cyan-primary);
+}
+
+.glow-box {
+    box-shadow: var(--glow-md);
+    border: 1px solid var(--cyan-primary);
+}
+
+.glow-box-active {
+    box-shadow: var(--glow-lg);
+    border: 2px solid var(--cyan-primary);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-darker);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--cyan-primary);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--blue-accent);
+}

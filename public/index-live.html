@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini Live Voice Demo (Italiano)</title>
+    <link rel="stylesheet" href="style-live.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>🎙️ Gemini Live Voice Demo</h1>
+            <p>Conversazione vocale in tempo reale con Gemini 2.0</p>
+        </header>
+
+        <main>
+            <div class="visualizer-container">
+                <canvas id="visualizer"></canvas>
+            </div>
+
+            <div class="controls">
+                <button id="recordButton" class="btn-primary">
+                    <span class="icon">🎙️</span>
+                    <span class="text">Parla</span>
+                </button>
+            </div>
+
+            <div id="status" class="status-text">Connessione in corso...</div>
+
+            <div id="response-container" class="response-box">
+                <p id="response-text"></p>
+            </div>
+        </main>
+
+        <footer>
+            <div class="info">
+                <span>🔊 Voce nativa Gemini</span>
+                <span>⚡ Streaming in tempo reale</span>
+            </div>
+        </footer>
+    </div>
+    <script src="app-live.js"></script>
+</body>
+
+</html>
