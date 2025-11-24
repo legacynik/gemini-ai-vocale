@@ -28,7 +28,7 @@ const TopBar = ({ isConnected, systemPrompt, onSystemPromptChange }) => {
                 <div className="persona-container" onClick={() => setIsEditing(true)}>
                     <span className="persona-label">SYSTEM PERSONA</span>
                     <p className="persona-text" title={systemPrompt}>
-                        {systemPrompt.length > 50 ? systemPrompt.substring(0, 50) + '...' : systemPrompt}
+                        {systemPrompt}
                     </p>
                 </div>
             </div>
