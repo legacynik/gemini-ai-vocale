@@ -54,8 +54,8 @@
     top: 100px;
     right: 2rem;
     width: 300px;
-    height: 60vh;
-    /* 2/3 of screen roughly */
+    height: 80vh;
+    /* Expanded height to fill the zone */
 
     /* "Fuori dal box" - removed background/border for pure text look */
     background: transparent;
