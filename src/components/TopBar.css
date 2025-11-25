@@ -194,3 +194,31 @@
     box-shadow: var(--glow-sm);
     transform: translateY(-1px);
 }
+
+@media (max-width: 768px) {
+    .persona-container {
+        top: 70px;
+        right: 1rem;
+        width: 150px; /* Much smaller width */
+        height: auto;
+        max-height: 20vh; /* Limit height */
+        background: rgba(0, 0, 0, 0.5); /* Add background for readability */
+        backdrop-filter: blur(4px);
+        border-radius: 10px;
+        padding: 0.5rem;
+    }
+
+    .persona-label {
+        font-size: 0.6rem;
+        text-align: center;
+    }
+
+    .persona-text {
+        font-size: 0.7rem;
+        text-align: center;
+        display: -webkit-box;
+        -webkit-line-clamp: 3; /* Truncate text */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+}

@@ -1,12 +1,14 @@
 import { useState, useRef, useEffect } from 'react';
 import { GoogleGenAI, Modality } from '@google/genai';
+import { TOOL_DEFINITIONS } from '../config/tools';
 
-export function useGeminiVoice(apiKey, systemPrompt, selectedVoice) {
+export function useGeminiVoice(apiKey, systemPrompt, selectedVoice, tools = []) {
     const [isRecording, setIsRecording] = useState(false);
     const [status, setStatus] = useState('Pronto');
     const [transcript, setTranscript] = useState('');
     const [isConnected, setIsConnected] = useState(false);
     const [audioData, setAudioData] = useState(new Uint8Array(128));
+    const [toolCalls, setToolCalls] = useState([]);
 
     const sessionRef = useRef(null);
     const audioContextRef = useRef(null);
@@ -21,6 +23,8 @@ export function useGeminiVoice(apiKey, systemPrompt, selectedVoice) {
     // Initialize Gemini session
     useEffect(() => {
         if (!apiKey) return;
+
+        let isActive = true;
 
         const initSession = async () => {
             try {
@@ -49,42 +53,61 @@ export function useGeminiVoice(apiKey, systemPrompt, selectedVoice) {
                     };
                 }
 
+                // Add tools if provided
+                if (tools && tools.length > 0) {
+                    config.tools = [{
+                        functionDeclarations: tools.map(toolName => TOOL_DEFINITIONS[toolName]).filter(Boolean)
+                    }];
+                }
+
                 const session = await ai.live.connect({
                     model: 'gemini-2.5-flash-native-audio-preview-09-2025',
                     config,
                     callbacks: {
-                        onopen: () => console.log('WebSocket opened'),
-                        onmessage: handleMessage,
-                        onerror: (e) => {
-                            console.error('WebSocket error:', e);
-                            setStatus('Errore: ' + (e.message || 'Errore sconosciuto'));
+                        onopen: () => {
+                            if (isActive) console.log('WebSocket opened');
                         },
-                        onclose: (e) => {
-                            console.log('WebSocket closed', e);
-                            setIsConnected(false);
-                            // Only set to Disconnected if we didn't just have an error
-                            setStatus(prev => prev.startsWith('Errore') ? prev : 'Disconnesso');
+                        onmessage: (msg) => {
+                            if (isActive) handleMessage(msg);
+                        },
+                        onerror: (e) => {
+                            if (isActive) setStatus('Errore: ' + e.message);
+                        },
+                        onclose: () => {
+                            if (isActive) {
+                                setIsConnected(false);
+                                setStatus('Disconnesso');
+                            }
+                        },
+                        onToolCall: async (toolCall) => {
+                            if (isActive) await handleToolCall(toolCall);
                         }
                     }
                 });
+
+                if (!isActive) {
+                    session.close();
+                    return;
+                }
 
                 sessionRef.current = session;
                 setIsConnected(true);
                 setStatus('Pronto! Clicca per parlare');
 
             } catch (error) {
-                setStatus('Errore: ' + error.message);
+                if (isActive) setStatus('Errore: ' + error.message);
             }
         };
 
         initSession();
 
         return () => {
+            isActive = false;
             if (sessionRef.current) {
                 sessionRef.current.close();
             }
         };
-    }, [apiKey, systemPrompt, selectedVoice]);
+    }, [apiKey, systemPrompt, selectedVoice, tools]);
 
     const handleMessage = (message) => {
         if (message.setupComplete) {
@@ -100,9 +123,80 @@ export function useGeminiVoice(apiKey, systemPrompt, selectedVoice) {
             setTranscript(prev => prev + ' ' + message.text);
         }
 
+        // Handle tool calls embedded in message if not using onToolCall callback
+        // (Depends on SDK version, keeping this flexible)
+        if (message.toolCall) {
+            handleToolCall(message.toolCall);
+        }
+
         if (message.serverContent?.turnComplete) {
             setStatus('Pronto! Clicca per parlare');
             nextPlayTimeRef.current = 0;
+        }
+    };
+
+    const handleToolCall = async (toolCall) => {
+        console.log('Tool Call received:', toolCall);
+        const { functionCalls } = toolCall;
+        if (!functionCalls) return;
+
+        const responses = [];
+
+        for (const call of functionCalls) {
+            const { name, args, id } = call;
+
+            // Log tool call
+            const logEntry = {
+                timestamp: new Date(),
+                tool: name,
+                params: args,
+                result: null, // Will update later
+                latency: 0
+            };
+
+            const startTime = Date.now();
+
+            // Execute mock tool
+            const result = await callSupabaseTool(name, args);
+
+            const endTime = Date.now();
+            logEntry.result = result;
+            logEntry.latency = endTime - startTime;
+
+            setToolCalls(prev => [logEntry, ...prev]);
+
+            responses.push({
+                name,
+                response: { result },
+                id
+            });
+        }
+
+        // Send response back to Gemini
+        if (sessionRef.current) {
+            sessionRef.current.sendToolResponse({
+                functionResponses: responses
+            });
+        }
+    };
+
+    const callSupabaseTool = async (toolName, args) => {
+        // In a real app, this would fetch from Supabase Edge Function
+        // const response = await fetch(`${SUPABASE_URL}/functions/v1/tool-proxy`, ...);
+
+        // Mock delay
+        await new Promise(resolve => setTimeout(resolve, 500 + Math.random() * 1000));
+
+        // Mock responses based on tool name
+        switch (toolName) {
+            case 'check_calendar':
+                return { available: true, slots: ['10:00', '14:00'] };
+            case 'schedule_appointment':
+                return { success: true, confirmationId: 'APT-' + Math.random().toString(36).substr(2, 6).toUpperCase() };
+            case 'create_client_profile':
+                return { success: true, profileId: 'CLI-' + Math.random().toString(36).substr(2, 6).toUpperCase() };
+            default:
+                return { success: true, message: 'Action completed successfully' };
         }
     };
 
@@ -244,6 +338,7 @@ export function useGeminiVoice(apiKey, systemPrompt, selectedVoice) {
         transcript,
         isConnected,
         audioData,
-        toggleRecording
+        toggleRecording,
+        toolCalls
     };
 }
