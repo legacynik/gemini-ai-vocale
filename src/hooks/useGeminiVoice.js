@@ -55,10 +55,15 @@ export function useGeminiVoice(apiKey, systemPrompt, selectedVoice) {
                     callbacks: {
                         onopen: () => console.log('WebSocket opened'),
                         onmessage: handleMessage,
-                        onerror: (e) => setStatus('Errore: ' + e.message),
-                        onclose: () => {
+                        onerror: (e) => {
+                            console.error('WebSocket error:', e);
+                            setStatus('Errore: ' + (e.message || 'Errore sconosciuto'));
+                        },
+                        onclose: (e) => {
+                            console.log('WebSocket closed', e);
                             setIsConnected(false);
-                            setStatus('Disconnesso');
+                            // Only set to Disconnected if we didn't just have an error
+                            setStatus(prev => prev.startsWith('Errore') ? prev : 'Disconnesso');
                         }
                     }
                 });
